@@ -15,9 +15,12 @@ type Server struct {
 func New(
 	address string,
 ) *Server {
-	mux := http.NewServeMux()
+	var server Server
 
-	server := http.Server{
+	mux := http.NewServeMux()
+	mux.Handle("/video", server.videoHandler())
+
+	httpServer := http.Server{
 		Addr:    address,
 		Handler: mux,
 	}
@@ -25,10 +28,9 @@ func New(
 	consoleWriter := zerolog.NewConsoleWriter()
 	logger := zerolog.New(consoleWriter).With().Timestamp().Logger()
 
-	return &Server{
-		logger: &logger,
-		server: &server,
-	}
+	server.logger = &logger
+	server.server = &httpServer
+	return &server
 }
 
 func (s *Server) ListenAndServe() error {
