@@ -5,10 +5,12 @@ import (
 	"net/http"
 )
 
+// videoPath is a helper method for defining video file server paths.
 func (s *Server) videoPath() string {
 	return fmt.Sprintf("content/video")
 }
 
+// writeInfoResponse is a helper method for returning info http responses.
 func (s *Server) writeInfoResponse(
 	w http.ResponseWriter,
 	r *http.Request,

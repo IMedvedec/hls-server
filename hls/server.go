@@ -7,11 +7,13 @@ import (
 	"github.com/rs/zerolog"
 )
 
+// Server defines an application server with its dependencies.
 type Server struct {
 	logger *zerolog.Logger
 	server *http.Server
 }
 
+// New is a Server constructor.
 func New(
 	address string,
 ) *Server {
@@ -19,7 +21,7 @@ func New(
 
 	mux := http.NewServeMux()
 	// video file server.
-	mux.Handle("/content/video/", http.StripPrefix("/content/video/", http.FileServer(http.Dir(server.videoPath()))))
+	mux.Handle(server.videoPath(), http.StripPrefix(server.videoPath(), http.FileServer(http.Dir(server.videoPath()))))
 
 	httpServer := http.Server{
 		Addr:    address,
@@ -34,10 +36,12 @@ func New(
 	return &server
 }
 
+// ListenAndServe acts as a http listen and serve wrapper.
 func (s *Server) ListenAndServe() error {
 	return s.server.ListenAndServe()
 }
 
+// Shutdown acts as a http shutdown wrapper.
 func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }

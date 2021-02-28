@@ -19,6 +19,7 @@ const (
 	shutdownTimeout time.Duration = 5 * time.Second
 )
 
+// application defines the main application with its dependencies.
 type application struct {
 	logger *zerolog.Logger
 
@@ -26,6 +27,7 @@ type application struct {
 	cancel context.CancelFunc
 }
 
+// New is the main application constructor.
 func New() *application {
 	zerolog.ErrorStackMarshaler = pkgerrors.MarshalStack
 	consoleWriter := zerolog.NewConsoleWriter()
@@ -40,6 +42,7 @@ func New() *application {
 	}
 }
 
+// Run starts the application and is running for its life cycle.
 func (app *application) Run() {
 	defer app.cancel()
 
@@ -56,6 +59,7 @@ func (app *application) Run() {
 	app.logger.Info().Msg(fmt.Sprintf("Application has finished successfully"))
 }
 
+// serverLifeCycle is a helper method for maintaining server life cycles.
 func (app *application) serverLifeCycle() {
 	server := hls.New(hlsServerAddress)
 

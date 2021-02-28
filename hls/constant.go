@@ -1,10 +1,6 @@
 package hls
 
 const (
-	videoIDKey string = "vid"
-)
-
-const (
 	contentType string = "Content-Type"
 	accept      string = "Accept"
 )
