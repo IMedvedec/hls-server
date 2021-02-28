@@ -18,7 +18,8 @@ func New(
 	var server Server
 
 	mux := http.NewServeMux()
-	mux.Handle("/video", server.videoHandler())
+	// video file server.
+	mux.Handle("/content/video/", http.StripPrefix("/content/video/", http.FileServer(http.Dir(server.videoPath()))))
 
 	httpServer := http.Server{
 		Addr:    address,
