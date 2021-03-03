@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/go-chi/chi/v5"
 	"github.com/rs/zerolog"
 )
 
@@ -19,13 +20,20 @@ func New(
 ) *Server {
 	var server Server
 
-	mux := http.NewServeMux()
+	router := chi.NewRouter()
 	// video file server.
-	mux.Handle(server.videoPath(), http.StripPrefix(server.videoPath(), http.FileServer(http.Dir(server.videoPath()))))
+	router.Route("/fileserver/content", func(r chi.Router) {
+		r.Get("/video/{videoID}", http.StripPrefix("/fileserver/content/video/", http.FileServer(http.Dir("content/video"))).ServeHTTP)
+	})
+	// REST endpoints.
+	router.Route("/multimedia/video", func(r chi.Router) {
+		r.Get("/{videoID}/stream", server.hlsVideoHandler())
+		r.Get("/{videoID}/stream/{segmentID}", server.hlsVideoHandler())
+	})
 
 	httpServer := http.Server{
 		Addr:    address,
-		Handler: mux,
+		Handler: router,
 	}
 
 	consoleWriter := zerolog.NewConsoleWriter()

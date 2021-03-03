@@ -9,4 +9,5 @@ const (
 	contentTypeTextHTML string = "text/html"
 	contentTypeJSON     string = "application/json"
 	contentTypeM3U8     string = "application/x-mpegURL"
+	contentTypeTS       string = "video/MP2T"
 )
