@@ -8,6 +8,6 @@ const (
 const (
 	contentTypeTextHTML string = "text/html"
 	contentTypeJSON     string = "application/json"
-	contentTypeM3U8     string = "application/x-mpegURL"
+	contentTypeM3U8     string = "application/x-mpegurl"
 	contentTypeTS       string = "video/MP2T"
 )
