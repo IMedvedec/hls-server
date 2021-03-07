@@ -8,7 +8,7 @@ import (
 )
 
 // videoPath constructs video file path for the handler.
-func (s *Server) videoPath(filename string) string {
+func videoPath(filename string) string {
 	return fmt.Sprintf("content/video/%s", filename)
 }
 
@@ -19,11 +19,11 @@ func (s *Server) hlsVideoHandler() http.HandlerFunc {
 		segmentID := chi.URLParam(r, "segmentID")
 
 		if segmentID != "" {
-			http.ServeFile(w, r, s.videoPath(segmentID))
+			http.ServeFile(w, r, videoPath(segmentID))
 			w.Header().Set(contentType, contentTypeTS)
 			s.logger.Info().Msg(fmt.Sprintf("Request for video '%s' and segment '%s' got served", videoID, segmentID))
 		} else {
-			http.ServeFile(w, r, s.videoPath(videoID))
+			http.ServeFile(w, r, videoPath(videoID))
 			w.Header().Set(contentType, contentTypeM3U8)
 			s.logger.Info().Msg(fmt.Sprintf("Request for video '%s' got served", videoID))
 		}
