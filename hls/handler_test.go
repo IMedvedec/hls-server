@@ -53,6 +53,18 @@ func TestHlsVideoHandler(t *testing.T) {
 			}(),
 		},
 		{
+			name:               "stream not existing",
+			requestPath:        "/multimedia/video/ocean_test_missing.m3u8/stream",
+			requestVideoID:     "ocean_test_missing.m3u8",
+			requestSegmentID:   "",
+			requestMethod:      http.MethodGet,
+			responseStatusCode: http.StatusNotFound,
+			responseHeaders:    []string{contentTypeTextHTML},
+			responseBody: func() []byte {
+				return []byte("Wanted stream doesn't exist.")
+			}(),
+		},
+		{
 			name:               "valid segment get",
 			requestPath:        "/multimedia/video/ocean_test.m3u8/stream/ocean_test0.ts",
 			requestVideoID:     "ocean_test.m3u8",
@@ -74,10 +86,25 @@ func TestHlsVideoHandler(t *testing.T) {
 				return content
 			}(),
 		},
+		{
+			name:               "segment not existing",
+			requestPath:        "/multimedia/video/ocean_test_missing.m3u8/stream/missing_segment.ts",
+			requestVideoID:     "ocean_test_missing.m3u8",
+			requestSegmentID:   "missing_segment.ts",
+			requestMethod:      http.MethodGet,
+			responseStatusCode: http.StatusNotFound,
+			responseHeaders:    []string{contentTypeTextHTML},
+			responseBody: func() []byte {
+				return []byte("Wanted segment doesn't exist.")
+			}(),
+		},
 	}
 
 	for _, c := range cases {
+		c := c
 		t.Run(c.name, func(t *testing.T) {
+			t.Parallel()
+
 			request := httptest.NewRequest(c.requestMethod, c.requestPath, nil)
 			rctx := chi.NewRouteContext()
 			rctx.URLParams.Add("videoID", c.requestVideoID)
